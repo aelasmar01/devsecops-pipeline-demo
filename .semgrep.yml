@@ -2,6 +2,20 @@ rules:
   - id: insecure-sql-query
     patterns:
       - pattern: cursor.execute(f"...")
-    message: "Potential SQL injection using f-strings in queries"
+    message: "Possible SQL injection using f-strings"
+    severity: ERROR
+    languages: [python]
+
+  - id: hardcoded-secret
+    patterns:
+      - pattern: SECRET_KEY = "$SECRET"
+    message: "Hardcoded secret detected"
+    severity: WARNING
+    languages: [python]
+
+  - id: command-injection
+    patterns:
+      - pattern: os.popen(f"...")
+    message: "Possible OS command injection"
     severity: ERROR
     languages: [python]

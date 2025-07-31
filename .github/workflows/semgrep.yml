@@ -16,4 +16,4 @@ jobs:
       - name: Run Semgrep
         uses: returntocorp/semgrep-action@v1
         with:
-          config: "p/ci"   # Use Semgrep’s default CI rules
+          config: ".semgrep.yml"
