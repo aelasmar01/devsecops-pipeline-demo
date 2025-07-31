@@ -25,13 +25,13 @@ jobs:
 
       - name: Run OWASP ZAP Baseline Scan
         run: |
-          mkdir -p zap_results
-          chmod 777 zap_results
-          docker run --network="host" -u 0 -v $(pwd)/zap_results:/zap/wrk/:rw \
-            ghcr.io/zaproxy/zaproxy:stable zap-baseline.py \
+          docker run --name zap_scan --network="host" ghcr.io/zaproxy/zaproxy:stable zap-baseline.py \
             -t http://localhost:5001 \
             -r zap_report.html || true
-            
+
+          # Copy report out of the container
+          docker cp zap_scan:/zap/zap_report.html ./zap_report.html
+
       - name: Upload ZAP Report
         uses: actions/upload-artifact@v4
         with:
