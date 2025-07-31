@@ -1,0 +1,37 @@
+name: OWASP ZAP DAST Scan
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  zap_scan:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Docker
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and Run App Container
+        run: |
+          docker build -t zap-demo-app .
+          docker run -d -p 5001:5000 zap-demo-app
+          sleep 5  # Give container time to start
+
+      - name: Run OWASP ZAP Baseline Scan
+        run: |
+          docker run --network="host" -v $(pwd):/zap/wrk/:rw \
+            owasp/zap2docker-stable zap-baseline.py \
+            -t http://localhost:5001 \
+            -r zap_report.html || true
+
+      - name: Upload ZAP Report
+        uses: actions/upload-artifact@v3
+        with:
+          name: zap-dast-report
+          path: zap_report.html
