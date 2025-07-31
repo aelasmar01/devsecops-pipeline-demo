@@ -13,7 +13,7 @@
     <h2>Results:</h2>
     <ul>
     {% for row in result %}
-      <li>{{ row }}</li>
+      <li>{{ row|safe }}</li>
     {% endfor %}
     </ul>
   {% endif %}
