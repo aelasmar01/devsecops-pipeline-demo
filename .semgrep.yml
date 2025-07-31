@@ -1,0 +1,7 @@
+rules:
+  - id: insecure-sql-query
+    patterns:
+      - pattern: cursor.execute(f"...")
+    message: "Potential SQL injection using f-strings in queries"
+    severity: ERROR
+    languages: [python]
