@@ -25,13 +25,14 @@ jobs:
 
       - name: Run OWASP ZAP Baseline Scan
         run: |
-          docker run --network="host" -v $(pwd):/zap/wrk/:rw \
-          ghcr.io/zaproxy/zaproxy:stable zap-baseline.py \
-          -t http://localhost:5001 \
-          -r zap_report.html || true
+          mkdir -p zap_results
+          docker run --network="host" -v $(pwd)/zap_results:/zap/wrk/:rw \
+            ghcr.io/zaproxy/zaproxy:stable zap-baseline.py \
+            -t http://localhost:5001 \
+            -r zap_report.html || true
 
       - name: Upload ZAP Report
         uses: actions/upload-artifact@v4
         with:
           name: zap-dast-report
-          path: zap_report.html
+          path: zap_results/zap_report.html
