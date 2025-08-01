@@ -28,16 +28,11 @@ jobs:
           mkdir -p zap_results
           chmod 777 zap_results
           
-          docker run --name zap_scan --network="host" \
-            -u 0 \
-            -v $(pwd)/zap_results:/zap/wrk/:rw \
+          docker run --rm --network="host" \
             ghcr.io/zaproxy/zaproxy:stable zap-baseline.py \
             -t http://localhost:5001 \
             -r zap_report.html \
-            -I
-
-          docker cp zap_scan:/zap/zap_report.html ./zap_results/zap_report.html || true
-          docker rm zap_scan || true
+            -I > zap_results/zap_report.html
 
       - name: Check ZAP Warnings
         run: |
