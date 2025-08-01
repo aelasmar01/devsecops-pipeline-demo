@@ -34,6 +34,7 @@ jobs:
             ghcr.io/zaproxy/zaproxy:stable zap-baseline.py \
             -t http://localhost:5001 \
             -r zap_report.html \
+            -I
 
           EXIT_CODE=$(docker inspect zap_scan --format='{{.State.ExitCode}}')
 
