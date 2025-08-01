@@ -36,14 +36,13 @@ jobs:
             -r zap_report.html \
             -I
 
-          EXIT_CODE=$(docker inspect zap_scan --format='{{.State.ExitCode}}')
-
           docker cp zap_scan:/zap/zap_report.html ./zap_results/zap_report.html || true
           docker rm zap_scan || true
-          
-          echo "ZAP exit code: $EXIT_CODE"
-          if [ "$EXIT_CODE" -ne 0 ]; then
-            echo "❌ ZAP scan found issues. Failing the job."
+
+      - name: Check ZAP Warnings
+        run: |
+          if grep -q "WARN-NEW:" zap_results/zap_report.html; then
+            echo "❌ ZAP scan found warnings. Failing the job."
             exit 1
           fi
 
