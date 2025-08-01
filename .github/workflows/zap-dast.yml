@@ -31,14 +31,15 @@ jobs:
             ghcr.io/zaproxy/zaproxy:stable zap-baseline.py \
             -t http://localhost:5001 \
             -r zap_report.html \
-            -I || EXIT_CODE=$?
-
+            -I
+          EXIT_CODE=$?
+          
           docker cp zap_scan:/zap/zap_report.html ./zap_results/zap_report.html || true
           docker rm zap_scan || true
-
-          # Fail the job if ZAP exit code is non-zero
-          if [ $EXIT_CODE -ne 0 ]; then
-            echo "ZAP scan found issues. Failing the job."
+          
+          echo "ZAP exit code: $EXIT_CODE"
+          if [ "$EXIT_CODE" -ne 0 ]; then
+            echo "❌ ZAP scan found issues. Failing the job."
             exit 1
           fi
 
